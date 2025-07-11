@@ -18,7 +18,7 @@ our basic RAG workflow.
 I. Initialize and connect to our services
 ---
 
-For this we simply want to make sure we set up whatever storage and embeddings client we'll be using. 
+For this we simply want to make sure we set up whatever storage, chat, and embeddings client we'll be using. 
 
 For these workshops it'll be:
 - **Postgresql** for storage and querying
@@ -111,3 +111,24 @@ some examples I've seen, done, or would be curious to try are:
 - Split the input data set into small more relevant chunks such as headings for text/markdown documents.
 - Perform two searches in serial, for example one to find a relevant chapter in a book and another to find relevant contents in that chapter.
 
+*Using different embedding models.*
+
+I personally don't have the experience to know of the intricacies between different embeddings models and their performance. However, you should absolutely
+feel free and feel encouraged to experiment with different models to see if one works better for your use case than another. If you do, please reach out and
+let me know of your findings. I'm also terribly curious to know how well the embeddings from one model would line up to embeddings from another model.
+
+# FAQ
+
+*Do you have to use Docker for hosting our database and models?*
+
+No, use whatever you like, are comfortable with, or your team prefers. Docker was chosen for this project simply for portability and ease of use.
+
+*Why does this use Ollama?*
+
+It had a good convenient Docker image, decent interfaces in dotnet, is __free__ and has pretty decent documentation.
+
+*Why does this use PostgreSQL*
+
+For a very similar reason as why Ollama. Good docker image, good docs, free. Most importantly though it had all of these qualities along with
+having support for vector search and vector tables. I've also found success using Redis for this on other projects but for a learning experience
+being able to use SQL, a much more commonly known and used language, I chose PostgreSQL. (Plus it was a good excuse to learn it a bit better.)
