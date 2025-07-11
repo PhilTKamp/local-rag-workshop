@@ -10,6 +10,91 @@ providing as much or as little guidance as is desired.
 > Disclaimer: I am not and will not pretend to be an expert in this space. Statements in this workshop
 > are made as accurate to my knowledge as possible. 
 
+# First Time Set Up
+
+Before running any of the projects, there's some initial set up required. If you run into any issues that can't be resolved you can try
+doing a full reset by following the directions under [#Final-Clean-Up] and restarting this section again.
+
+To perform the initial set up you'll want to ensure the containers are running by executing the following command on the terminal:
+
+```bash
+docker compose up -d 
+# If you run into an error, make sure the Docker Engine is running!
+```
+
+This will read from the `docker-compose.yml` file to stand up the containers specified within, passing the `-d` flag just runs it in detached mode so your terminal remains free after.
+
+After the previous command completes, there are a couple of tasks that need to be done.
+- Enable the pgvector extension in the Postgres container.
+- Pull the desired chat and embeddings models in the Ollama container.
+
+*Important note:*
+If for any reason you end up having issues and/or need to do a fresh start you can run `docker compose down` followed by `docker volume rm ollama_data postgresql_data`
+The first will shutdown and delete the containers, the second will delete the persistent data store created for those containers.
+
+
+__Enable the pgvector extension__
+
+The pgvector extension is the addon for Postgres which enables vector storage and querying. To do this the following commands need to be run:
+
+First launch the psql executable on the postgres container:
+```bash
+# On the 'postgresql' container, execute the 'psql' executable with arguments '-U admin' (standing for User admin) 
+docker exec -it postgresql ./bin/psql -U admin
+
+# With the updated terminal, you should see the line beginning with 'admin=#'
+CREATE EXTENSION IF NOT EXISTS vector;
+SELECT extname FROM pg_extension;
+
+# Exit the container
+exit
+```
+
+__Pull the desired chat and embeddings models__
+
+We need to pull down the models we want to utilize before we attempt to use them. To do this we need to enter
+the ollama container and pull them down. Run the following commands:
+
+```bash
+# Open a bash shell on the container, afterwards you should see the line beginning with 'root@<CONTAINER_ID>:/#'
+docker exec -it ollama bash
+
+# Pull the embeddings model (currently most popular one on ollama.com)
+ollama pull nomic-embed-text
+
+# Pull the chat model (A lightweight open model from Microsoft)
+ollama pull phi3:latest
+
+# Exit the container
+exit
+```
+
+# Final Clean Up
+
+All changes to the code and repo can be cleared up by running `git reset --hard main` which will return you to the initial state of the `main` branch.
+
+__Reset the state of the repository__
+
+You can reset your local repo to the starting point by running the following command:
+```bash
+git reset --hard main
+```
+
+__Tear down containers__
+
+One of the following commands, based on your discretion, can be used to clean up the docker set up.
+
+```bash
+# Tear down and delete the containers
+docker compose down
+
+# Do all of the above but also wipe the volumes (where the sql data and ollama models are stored)
+docker compose down --volumes
+
+# Do a full clean (containers, images, and volumes)
+docker compose down --rmi all --volumes
+```
+
 # Rough Overview on RAG
 
 At a high-level, the goal of these projects will be meeting the following requirements to stand up
