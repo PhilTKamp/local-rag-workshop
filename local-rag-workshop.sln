@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{78BEC43C-197
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRagCli", "src\LocalRagCli\LocalRagCli.csproj", "{2598644E-043E-4EFD-9DAF-90E4598F3E3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRagCli-Skeleton", "src\LocalRagCli-Skeleton\LocalRagCli-Skeleton.csproj", "{750F308C-75FC-4C40-88B6-58EB1ED5540D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRagCli-Reference", "src\LocalRagCli-Reference\LocalRagCli-Reference.csproj", "{750F308C-75FC-4C40-88B6-58EB1ED5540D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

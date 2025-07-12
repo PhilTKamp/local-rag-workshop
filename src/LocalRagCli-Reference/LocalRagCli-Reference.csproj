@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="npgsql" Version="9.0.3" />
     <PackageReference Include="Ollamasharp" Version="5.2.8" />
     <PackageReference Include="Pgvector" Version="0.3.2" />
