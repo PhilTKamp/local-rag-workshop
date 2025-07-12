@@ -11,6 +11,21 @@ sandbox. Additionally, there is the LocalRagCli-Reference project, which provide
 > are made as accurate to my knowledge as possible. 
 
 # Initial Setup and Clean up
+
+## Before starting
+
+This workshop/project as written requires that the machine you're using be capable of launching docker containers. I personally use the
+Docker Engine w/ Docker Desktop on my Windows and Ubuntu machines.
+
+For Docker Engine and Docker Desktop, the install steps will vary based on your OS but the following links should provide details on installation. Feel free to ask if you have any questions!
+
+[Windows install instructions](https://docs.docker.com/desktop/setup/install/windows-install/) - I personally use a WSL 2 backend
+
+[Linux install instructions](https://docs.docker.com/engine/install/) - Choose your flavor
+
+[Mac install instructions](https://docs.docker.com/desktop/setup/install/mac-install/)
+
+
 ## First Time Set Up
 
 Before running any of the projects, there's some initial set up required. If you run into any issues that can't be resolved you can try
