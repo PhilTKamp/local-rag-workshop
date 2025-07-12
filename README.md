@@ -4,13 +4,14 @@ A collection of dotnet projects presented as a learning tool for becoming famili
 workflows. How they function under the hood and how to get one running in a strictly local environment.
 The original intent of this repo is to be used in a workshop type of environment and as such the 
 
-All projects are under the `src/` folder, each having a varying level of completeness in the goal of
-providing as much or as little guidance as is desired.
+The project is located under the `/src` folder. There is the LocalRagCli project set up as an empty project to act as a
+sandbox. Additionally, there is the LocalRagCli-Reference project, which provides an implementation.
 
 > Disclaimer: I am not and will not pretend to be an expert in this space. Statements in this workshop
 > are made as accurate to my knowledge as possible. 
 
-# First Time Set Up
+# Initial Setup and Clean up
+## First Time Set Up
 
 Before running any of the projects, there's some initial set up required. If you run into any issues that can't be resolved you can try
 doing a full reset by following the directions under [#Final-Clean-Up] and restarting this section again.
@@ -39,11 +40,16 @@ The pgvector extension is the addon for Postgres which enables vector storage an
 
 First launch the psql executable on the postgres container:
 ```bash
-# On the 'postgresql' container, execute the 'psql' executable with arguments '-U admin' (standing for User admin) 
-docker exec -it postgresql ./bin/psql -U admin
+# On the 'postgresql' container, execute the 'psql' executable with arguments to use the User admin and database postgres (default db) 
+docker exec -it postgresql ./bin/psql -U admin -d postgres
 
-# With the updated terminal, you should see the line beginning with 'admin=#'
+# Once the command completes you should see the line beginning with 'postgres=#'
+# Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.
+
+# Enable the pgvector extension in postgres (support for vector search)
 CREATE EXTENSION IF NOT EXISTS vector;
+
+# You should see vector in the resulting list from this comamnd
 SELECT extname FROM pg_extension;
 
 # Exit the container
@@ -60,9 +66,11 @@ the ollama container and pull them down. Run the following commands:
 docker exec -it ollama bash
 
 # Pull the embeddings model (currently most popular one on ollama.com)
+# Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.
 ollama pull nomic-embed-text
 
 # Pull the chat model (A lightweight open model from Microsoft)
+# Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.
 ollama pull phi3:latest
 
 # Exit the container
@@ -70,8 +78,9 @@ exit
 ```
 
 Note that these can be pulled via the web interface that ollama presents. Specifically with OllamaSharp you can do this in C# directly.
+Because these downloads can take a while, it's helpful to do this before a live workshop. 😉
 
-# Final Clean Up
+## Final Clean Up
 
 All changes to the code and repo can be cleared up by running `git reset --hard main` which will return you to the initial state of the `main` branch.
 
@@ -95,6 +104,51 @@ docker compose down --volumes
 
 # Do a full clean (containers, images, and volumes)
 docker compose down --rmi all --volumes
+```
+
+# Building and Running the projects
+
+Each project is implemented as a dotnet console project.
+
+They were created with the following command:
+```bash
+cd ./src
+dotnet new console --use-program-main -f net8.0 -o PROJECT_NAME
+```
+
+## Building the project(s)
+
+To build the projects the following commands can be run on the terminal.
+
+```bash
+dotnet build
+# Or to build individually
+dotnet build ./src/LocalRagCli/LocalRagCli.csproj
+# and
+dotnet build ./src/LocalRagCli-Reference/LocalRagCli-Reference.csproj
+```
+
+## Running the project(s)
+
+Before running, ensure the docker containers are running. If they're not or you're unsure they can be started with the following command.
+
+```bash
+# Build the docker containers according to the docker-compose.yml file and launch them in detached mode
+docker compose up -d
+```
+
+With the containers running, in the terminal you'll want to navigate to the project you wish to run.
+
+```bash
+cd ./src/LocalRagCli
+# OR
+cd ./src/LocalRagCli-Reference
+```
+
+Then start the console app with the following command:
+
+```bash
+dotnet run
 ```
 
 # Rough Overview on RAG
