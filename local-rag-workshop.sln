@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{78BEC43C-197
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRagCli", "src\LocalRagCli\LocalRagCli.csproj", "{2598644E-043E-4EFD-9DAF-90E4598F3E3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRagCli-Skeleton", "src\LocalRagCli-Skeleton\LocalRagCli-Skeleton.csproj", "{750F308C-75FC-4C40-88B6-58EB1ED5540D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +22,13 @@ Global
 		{2598644E-043E-4EFD-9DAF-90E4598F3E3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2598644E-043E-4EFD-9DAF-90E4598F3E3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2598644E-043E-4EFD-9DAF-90E4598F3E3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{750F308C-75FC-4C40-88B6-58EB1ED5540D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{750F308C-75FC-4C40-88B6-58EB1ED5540D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{750F308C-75FC-4C40-88B6-58EB1ED5540D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{750F308C-75FC-4C40-88B6-58EB1ED5540D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2598644E-043E-4EFD-9DAF-90E4598F3E3F} = {78BEC43C-1971-48CB-B05E-A662EDA72987}
+		{750F308C-75FC-4C40-88B6-58EB1ED5540D} = {78BEC43C-1971-48CB-B05E-A662EDA72987}
 	EndGlobalSection
 EndGlobal
