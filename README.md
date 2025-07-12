@@ -69,6 +69,8 @@ ollama pull phi3:latest
 exit
 ```
 
+Note that these can be pulled via the web interface that ollama presents. Specifically with OllamaSharp you can do this in C# directly.
+
 # Final Clean Up
 
 All changes to the code and repo can be cleared up by running `git reset --hard main` which will return you to the initial state of the `main` branch.
@@ -119,9 +121,8 @@ our database. This mapping happens via our embedding model.
 
 For every value we want to...
 1. Read in the value
-2. Store it in our database
-3. Generate an embedding for our model (AKA map it to an n-dimensional vector space)
-4. Store that embedding along with a reference to our original row in a vector table in our database.
+2. Generate an embedding for our model (AKA map it to an n-dimensional vector space)
+3. Store that embedding along with a reference to our original row in a vector table in our database.
 
 III. Use the user's query to find the relevant data from our input
 ---
@@ -165,11 +166,12 @@ Maybe you or your users don't care for the final response message and would bene
 significantly more expensive computationally compared to embedding models. If you don't really need that final message, cut it. Save the compute,
 complexity and avoid the risk of hallucinations. It'll run better locally and/or leave you with less operational costs.
 
-*Is it easier to store the values directly with the embeddings?*
+*Should I store the values directly with the embeddings?*
 
-This workshop separates the two out into a vector search table and a traditional data table. That isn't necessarily essential and is done primarily
-to allow for different indexes or search methods to be created on the same data. If you don't need the extra complexity of multiple tables, just 
-group them together.
+This workshop keeps the embeddings stored alongsize the values themselves for simplicity. This isn't essentially by any means
+in some cases you may want these embeddings separated and to just store a reference or foreign key back to the original data point.
+I've split these out before for implementations in Redis due to data type restrictions. Perhaps you want to separate the embeddings
+as not row will have an embedding, or maybe you want to build an index on just the embedding?
 
 *In a complex data model, what values are worth embedding?*
 
@@ -184,7 +186,8 @@ you want to separate into another vector table, etc.
 There are two upper limits when it comes to the length of data that you create embeddings for. One, there's a token limit that your model can't exceed, plus more tokens are more expensive.
 Two, there's a sweet spot of having the right amount of data in an embedding that your search is relevant. Too little data and the search results are wildly inaccurate, you may return
 values that have nothing to do with the users query. Too much data and your search results (in theory) start to become too general and if you're feeding those results into another chat client
-directly, you blow your token budget.
+directly, you blow your token budget. I tend to shoot for what feel like logical chunks of data, considering what type of content a user is *most likely* to want in a response helps keep your
+token count lower and lead to more accurate and precise results.
 
 *Adding intermediate steps.*
 
