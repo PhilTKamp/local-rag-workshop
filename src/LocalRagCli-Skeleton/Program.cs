@@ -31,7 +31,7 @@ class Program
         var ollama = new OllamaApiClient(OLLAMA_URI);
 
         Console.WriteLine("Ensuring pgvector extension is enabled...");
-        await using (var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public"))
+        await using (var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public", dbConn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
@@ -78,17 +78,14 @@ class Program
             var embedding = embeddingsResponse.Embeddings[0]; // Multiple values can be passed to the Embed Async method, we only passed one.
 
             // Step 2c. Insert the value into the database
-            await using var dataInsertCmd = new NpgsqlCommand($"INSERT INTO data({nameof(DataRow.Id)}, {nameof(DataRow.Value)}, {nameof(DataRow.Embedding)}) VALUES ($1, $2, $3)", dbConn)
+            await using (var cmd = new NpgsqlCommand($"INSERT INTO data({nameof(DataRow.Id)}, {nameof(DataRow.Value)}, {nameof(DataRow.Embedding)}) VALUES ($1, $2, $3)", dbConn))
             {
-                Parameters =
-                {
-                    new() { Value = i },
-                    new() { Value = val },
-                    new() { Value = embedding }
-                }
-            };
+                cmd.Parameters.AddWithValue(i);
+                cmd.Parameters.AddWithValue(val);
+                cmd.Parameters.AddWithValue(embedding);
 
-            await dataInsertCmd.ExecuteNonQueryAsync();
+                await cmd.ExecuteNonQueryAsync();
+            }
         }
 
         Console.WriteLine("Values inserted.");
@@ -109,25 +106,28 @@ class Program
         var userEmbedding = userEmbeddingsResponse.Embeddings[0];
 
         // Step 5. Perform a vector search for adjacent embeddings in the database.
-        await using var userSearchCmd = new NpgsqlCommand($"SELECT * FROM data ORDER BY {nameof(DataRow.Embedding)} <-> $1 LIMIT 5", dbConn)
-        {
-            Parameters = {
-                new () { Value = new Vector(userEmbedding) }
-            }
-        };
-
         var searchResults = new List<DataRow>();
-        await using (var userSearchReader = await userSearchCmd.ExecuteReaderAsync())
-        {
-            while (await userSearchReader.ReadAsync())
-            {
-                int id = (int)userSearchReader[nameof(DataRow.Id)];
-                string value = (string)userSearchReader[nameof(DataRow.Value)];
-                Vector embedding = (Vector)userSearchReader[nameof(DataRow.Embedding)];
 
-                searchResults.Add(new(id, value, embedding.ToArray()));
+        await using (var cmd = new NpgsqlCommand($"SELECT * FROM data ORDER BY {nameof(DataRow.Embedding)} <-> $1 LIMIT 5", dbConn))
+        {
+            var vectorEmbedding = new Vector(userEmbedding);
+            cmd.Parameters.AddWithValue(vectorEmbedding);
+
+
+            await using (var userSearchReader = await cmd.ExecuteReaderAsync())
+            {
+                while (await userSearchReader.ReadAsync())
+                {
+                    int id = (int)userSearchReader[nameof(DataRow.Id)];
+                    string value = (string)userSearchReader[nameof(DataRow.Value)];
+                    Vector embedding = (Vector)userSearchReader[nameof(DataRow.Embedding)];
+
+                    searchResults.Add(new(id, value, embedding.ToArray()));
+                }
             }
         }
+
+
 
         // Step 6. Pass the results along with the user prompt into the chat completion client
         var chatMessages = new List<Message>();
@@ -154,9 +154,10 @@ class Program
         // Step 8. (Optional) Loop back to Step 3
 
         // Step 9. (Optional) Drop the tables in the database to avoid duped data on consecutive runs
-        await using var dropTableCmd = new NpgsqlCommand("DROP TABLE data", dbConn);
-
-        await dropTableCmd.ExecuteNonQueryAsync();
+        await using (var cmd = new NpgsqlCommand("DROP TABLE data", dbConn))
+        {
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 
     public record DataRow(int Id, string Value, float[] Embedding);
