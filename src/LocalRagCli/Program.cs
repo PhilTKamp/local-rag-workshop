@@ -13,17 +13,13 @@ class Program
 
         // Step 1a. Initialize the tables in the database.
 
-
         // Step 2. Loop over and process the data set
 
-        // Step 2a. Read in one value
+            // Step 2a. Read in a value
 
-        // Step 2b. Save the value to the database
+            // Step 2b. Generate the embeddings for the value
 
-        // Step 2c. Generate the embeddings for the value
-
-        // Step 2d. Store the embedding along with the id of the value in the vector table
-
+            // Step 2c. Store the row in the database
 
         // Step 3. Read the user's query
 
@@ -31,14 +27,12 @@ class Program
 
         // Step 5. Perform a vector search for adjacent embeddings in the database.
 
-        // Step 6. Get the values corresponding to the adjacent embeddings
+        // Step 6. Pass these values along with the user prompt into the chat completion client
 
-        // Step 7. Pass these values along with the user prompt into the chat completion client
+        // Step 7. Output the full response.
 
-        // Step 8. Output the full response.
+        // Step 8. (Optional) Loop back to Step 3
 
-        // Step 9. (Optional) Loop back to Step 3
-
-        // Step 10. (Optional) Drop the tables in the database to avoid duped data on consecutive runs
+        // Step 9. (Optional) Drop the tables in the database to avoid duped data on consecutive runs
     }
 }

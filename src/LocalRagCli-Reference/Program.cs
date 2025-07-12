@@ -22,6 +22,7 @@ class Program
     static async Task Main(string[] args)
     {
         // Step 1. Initialize the storage connection, chat client, and embedding client
+
         Console.WriteLine("Initializing...");
         var builder = new NpgsqlDataSourceBuilder(POSTGRES_CONN_STRING);
         builder.UseVector();
@@ -30,6 +31,7 @@ class Program
         await using var dbConn = await db.OpenConnectionAsync();
         var ollama = new OllamaApiClient(OLLAMA_URI);
 
+        // Ensure the pgvector extension is enabled (this is unnecessary but harmless if you followed initial set up)
         Console.WriteLine("Ensuring pgvector extension is enabled...");
         await using (var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public", dbConn))
         {
@@ -48,7 +50,9 @@ class Program
 
         Console.WriteLine("Initialized.");
 
+
         // Step 2. Loop over and process the data set
+
         Console.WriteLine("Inserting Values...");
         var exampleValues = new List<string>()
         {
@@ -91,11 +95,15 @@ class Program
         Console.WriteLine("Values inserted.");
         Console.WriteLine();
 
+
         // Step 3. Read the user's query
+
         Console.WriteLine("Please enter your question below...");
         var userQuery = Console.ReadLine() ?? "";
 
+
         // Step 4. Generate an embedding for the user's query.
+
         var userEmbedRequest = new EmbedRequest()
         {
             Model = EMBEDDINGS_MODEL, // You could specify a default model, choosing explicit here for workshop clarity
@@ -105,7 +113,9 @@ class Program
         var userEmbeddingsResponse = await ollama.EmbedAsync(userEmbedRequest);
         var userEmbedding = userEmbeddingsResponse.Embeddings[0];
 
+
         // Step 5. Perform a vector search for adjacent embeddings in the database.
+
         var searchResults = new List<DataRow>();
 
         await using (var cmd = new NpgsqlCommand($"SELECT * FROM data ORDER BY {nameof(DataRow.Embedding)} <-> $1 LIMIT 5", dbConn))
@@ -128,8 +138,8 @@ class Program
         }
 
 
-
         // Step 6. Pass the results along with the user prompt into the chat completion client
+
         var chatMessages = new List<Message>();
 
         chatMessages.Add(new(ChatRole.System, "You are a search agent helping answer the user's query, you will receive text related to the user's query and should use those to answer."));
@@ -145,15 +155,20 @@ class Program
 
         };
 
+
         // Step 7. Output the full response.
+
         await foreach (var answerToken in ollama.ChatAsync(chatRequest))
         {
             Console.Write(answerToken?.Message.Content);
         }
 
+
         // Step 8. (Optional) Loop back to Step 3
 
+
         // Step 9. (Optional) Drop the tables in the database to avoid duped data on consecutive runs
+
         await using (var cmd = new NpgsqlCommand("DROP TABLE data", dbConn))
         {
             await cmd.ExecuteNonQueryAsync();
