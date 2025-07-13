@@ -48,7 +48,7 @@ If for any reason you end up having issues and/or need to do a fresh start you c
 The first will shutdown and delete the containers, the second will delete the persistent data store created for those containers.
 
 
-__Enable the pgvector extension__
+### Enable the pgvector extension
 
 The pgvector extension is the addon for Postgres which enables vector storage and querying. To do this the following commands need to be run:
 
@@ -76,7 +76,7 @@ SELECT extname FROM pg_extension;
 exit
 ```
 
-__Pull the desired chat and embeddings models__
+### Pull the desired chat and embeddings models
 
 We need to pull down the models we want to utilize before we attempt to use them. To do this we need to enter
 the ollama container and pull them down. Run the following commands:
