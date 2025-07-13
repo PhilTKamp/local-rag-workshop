@@ -125,7 +125,7 @@ Click "Save" and the server will be added. From there you can do whatever admin 
 
 Each project is implemented as a dotnet console project.
 
-They were created with the following command:
+They were created with the following command(s):
 ```bash
 cd ./src
 dotnet new console --use-program-main -f net8.0 -o PROJECT_NAME
