@@ -47,7 +47,6 @@ After the previous command completes, there are a couple of tasks that need to b
 If for any reason you end up having issues and/or need to do a fresh start you can run `docker compose down` followed by `docker volume rm ollama_data postgresql_data`
 The first will shutdown and delete the containers, the second will delete the persistent data store created for those containers.
 
-
 ### Enable the pgvector extension
 
 The pgvector extension is the addon for Postgres which enables vector storage and querying. To do this the following commands need to be run:
@@ -131,8 +130,6 @@ cd ./src
 dotnet new console --use-program-main -f net8.0 -o PROJECT_NAME
 ```
 
-
-
 ## Building the project(s)
 
 To build the projects the following commands can be run on the terminal.
@@ -173,7 +170,7 @@ dotnet run ./src/LocalRagCli-Reference/
 # Clean up
 
 Outside of the cloned repo, this project creates a few extra lingering resources that you may wish to clean up after experimenting.
-The largest of these resources are the docker volumes used to provide persistence to the ollama and postgres containers, these store the database and models used by
+The largest of these resources are the docker volumes used to provide persistence to the ollama and postgres containers. These store the database and models used by
 Postgres and Ollama respectively. Additionally, Docker Desktop will keep the docker images for both Postgres and Ollama downloaded locally, though those are
 smaller in size.
 
@@ -181,7 +178,7 @@ The following commands can be used to clean up changes to, or resources left by 
 
 __Reset the state of the repository__
 
-You can reset your local repo to the starting point by running the following command:
+*Reset repository to main*
 ```bash
 git reset --hard main
 ```
@@ -190,17 +187,20 @@ __Tear down containers__
 
 One of the following commands, based on your discretion, can be used to clean up the docker set up.
 
+*Tear down and delete the containers.*
 ```bash
-# Tear down and delete the containers
 docker compose down
-
-# Do all of the above but also wipe the volumes (where the sql data and ollama models are stored)
-docker compose down --volumes
-
-# Do a full clean (containers, images, and volumes)
-docker compose down --rmi all --volumes
 ```
 
+*Do all of the above but also wipe the volumes (reset sql, ollama, and pgAdmin data).*
+```bash
+docker compose down --volumes
+```
+
+*Do a full clean (containers, images, and volumes).*
+```bash
+docker compose down --rmi all --volumes
+```
 
 # Rough Overview on RAG
 
@@ -265,20 +265,20 @@ and improvements that should be made before your applying your RAG workflow to e
 
 **Some things to think about:**
 
-*Do you need to final auto-complete step or would it be enough to simply return the list of values back to the user?*
+Q: *Do you need to final auto-complete step or would it be enough to simply return the list of values back to the user?*
 
 Maybe you or your users don't care for the final response message and would benefit primarily just from the semantic search. Chat models are 
 significantly more expensive computationally compared to embedding models. If you don't really need that final message, cut it. Save the compute,
 complexity and avoid the risk of hallucinations. It'll run better locally and/or leave you with less operational costs.
 
-*Should I store the values directly with the embeddings?*
+Q: *Should I store the values directly with the embeddings?*
 
 This workshop keeps the embeddings stored alongsize the values themselves for simplicity. This isn't essentially by any means
 in some cases you may want these embeddings separated and to just store a reference or foreign key back to the original data point.
 I've split these out before for implementations in Redis due to data type restrictions. Perhaps you want to separate the embeddings
 as not row will have an embedding, or maybe you want to build an index on just the embedding?
 
-*In a complex data model, what values are worth embedding?*
+Q: *In a complex data model, what values are worth embedding?*
 
 Crude examples of RAG will just embed the entire value. However, that may not be ideal as you may only want to search on a part of a complex data model.
 Additionally, you may want to have multiple embeddings to allow for a more targeted search if your data model has a wide variety of data points. Unfortunately,
@@ -286,7 +286,7 @@ I can't provide a quick and easy answer for what to embed as it's going to depen
 you're building a catalog of personal notes for easy searching, maybe you just want to pull headings? Maybe there are images, graphs and other visuals that
 you want to separate into another vector table, etc.
 
-*What is the length of the data you're embedding?*
+Q: *What is the length of the data you're embedding?*
 
 There are two upper limits when it comes to the length of data that you create embeddings for. One, there's a token limit that your model can't exceed, plus more tokens are more expensive.
 Two, there's a sweet spot of having the right amount of data in an embedding that your search is relevant. Too little data and the search results are wildly inaccurate, you may return
@@ -294,7 +294,7 @@ values that have nothing to do with the users query. Too much data and your sear
 directly, you blow your token budget. I tend to shoot for what feel like logical chunks of data, considering what type of content a user is *most likely* to want in a response helps keep your
 token count lower and lead to more accurate and precise results.
 
-*Adding intermediate steps.*
+Q: *Adding intermediate steps.*
 
 At every stage, especially in a from scratch set up like this, you can add customizations and tweaks. I've not tested all of these personally, but 
 some examples I've seen, done, or would be curious to try are: 
@@ -304,7 +304,7 @@ some examples I've seen, done, or would be curious to try are:
 - Split the input data set into small more relevant chunks such as headings for text/markdown documents.
 - Perform two searches in serial, for example one to find a relevant chapter in a book and another to find relevant contents in that chapter.
 
-*Using different embedding models.*
+Q: *Using different embedding models.*
 
 I personally don't have the experience to know of the intricacies between different embeddings models and their performance. However, you should absolutely
 feel free and feel encouraged to experiment with different models to see if one works better for your use case than another. If you do, please reach out and
@@ -312,15 +312,15 @@ let me know of your findings. I'm also terribly curious to know how well the emb
 
 # FAQ
 
-*Do you have to use Docker for hosting our database and models?*
+Q: *Do you have to use Docker for hosting our database and models?*
 
 No, use whatever you like, are comfortable with, or your team prefers. Docker was chosen for this project simply for portability and ease of use.
 
-*Why does this use Ollama?*
+Q: *Why does this use Ollama?*
 
 It had a good convenient Docker image, decent interfaces in dotnet, is __free__ and has pretty decent documentation.
 
-*Why does this use PostgreSQL*
+Q: *Why does this use PostgreSQL*
 
 For a very similar reason as why Ollama. Good docker image, good docs, free. Most importantly though it had all of these qualities along with
 having support for vector search and vector tables. I've also found success using Redis for this on other projects but for a learning experience
