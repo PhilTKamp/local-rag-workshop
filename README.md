@@ -176,14 +176,14 @@ smaller in size.
 
 The following commands can be used to clean up changes to, or resources left by this repository.
 
-__Reset the state of the repository__
+## Reset the state of the repository
 
 *Reset repository to main*
 ```bash
 git reset --hard main
 ```
 
-__Tear down containers__
+## Tear down containers
 
 One of the following commands, based on your discretion, can be used to clean up the docker set up.
 
