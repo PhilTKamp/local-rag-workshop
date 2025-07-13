@@ -81,22 +81,24 @@ exit
 We need to pull down the models we want to utilize before we attempt to use them. To do this we need to enter
 the ollama container and pull them down. Run the following commands:
 
-*Opens a bash shell on the container, afterwards you should see the line beginning with 'root@<CONTAINER_ID>:/#'*
+*Opens a bash shell on the container*
 ```bash
 docker exec -it ollama bash
 ```
 
-*Pull the embeddings model (currently most popular one on ollama.com). Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.*
+Once the above completes you should see something like "root@CONTAINER_ID:/#" on the terminal. From here, use Ctrl+Shift+V to paste, it's a linux terminal in the container.
+
+*Pull the embeddings model (currently most popular one on ollama.com).*
 ```bash
 ollama pull nomic-embed-text
 ```
 
-*Pull the chat model (A lightweight open model from Microsoft). Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.*
+*Pull the chat model (A lightweight open model from Microsoft).*
 ```bash
 ollama pull phi3:latest
 ```
 
-*Exit the container*
+*Exit the container.*
 ```bash
 exit
 ```
