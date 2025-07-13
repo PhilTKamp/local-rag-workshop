@@ -180,7 +180,7 @@ The following commands can be used to clean up changes to, or resources left by 
 
 *Reset repository to main*
 ```bash
-git reset --hard main
+git reset --hard origin/main
 ```
 
 ## Tear down containers
