@@ -53,20 +53,26 @@ __Enable the pgvector extension__
 The pgvector extension is the addon for Postgres which enables vector storage and querying. To do this the following commands need to be run:
 
 First launch the psql executable on the postgres container:
+
+*On the 'postgresql' container, execute the 'psql' executable with arguments to use the User admin and database postgres (default db).*
 ```bash
-# On the 'postgresql' container, execute the 'psql' executable with arguments to use the User admin and database postgres (default db) 
 docker exec -it postgresql ./bin/psql -U admin -d postgres
+```
 
-# Once the command completes you should see the line beginning with 'postgres=#'
-# Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.
+Once the command completes you should see the line beginning with 'postgres=#'. From here, use Ctrl+Shift+V to paste, it's a linux terminal in the container.
 
-# Enable the pgvector extension in postgres (support for vector search)
+*Enable the pgvector extension in postgres (support for vector search)*
+```bash
 CREATE EXTENSION IF NOT EXISTS vector;
+```
 
-# You should see vector in the resulting list from this comamnd
+*Confirm extension is enabled. You should see vector in the resulting list from this comamnd*
+```bash
 SELECT extname FROM pg_extension;
+```
 
-# Exit the container
+*Exit the container.*
+```bash
 exit
 ```
 
@@ -75,19 +81,23 @@ __Pull the desired chat and embeddings models__
 We need to pull down the models we want to utilize before we attempt to use them. To do this we need to enter
 the ollama container and pull them down. Run the following commands:
 
+*Opens a bash shell on the container, afterwards you should see the line beginning with 'root@<CONTAINER_ID>:/#'*
 ```bash
-# Open a bash shell on the container, afterwards you should see the line beginning with 'root@<CONTAINER_ID>:/#'
 docker exec -it ollama bash
+```
 
-# Pull the embeddings model (currently most popular one on ollama.com)
-# Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.
+*Pull the embeddings model (currently most popular one on ollama.com). Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.*
+```bash
 ollama pull nomic-embed-text
+```
 
-# Pull the chat model (A lightweight open model from Microsoft)
-# Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.
+*Pull the chat model (A lightweight open model from Microsoft). Also you'll likely have to use Ctrl+Shift+V to paste, it's a linux terminal in the container.*
+```bash
 ollama pull phi3:latest
+```
 
-# Exit the container
+*Exit the container*
+```bash
 exit
 ```
 
@@ -127,9 +137,13 @@ To build the projects the following commands can be run on the terminal.
 
 ```bash
 dotnet build
-# Or to build individually
+```
+*Or to build individually*
+```bash
 dotnet build ./src/LocalRagCli/LocalRagCli.csproj
-# and
+```
+*and*
+```bash
 dotnet build ./src/LocalRagCli-Reference/LocalRagCli-Reference.csproj
 ```
 
@@ -142,18 +156,16 @@ Before running, ensure the docker containers are running. If they're not or you'
 docker compose up -d
 ```
 
-With the containers running, in the terminal you'll want to navigate to the project you wish to run.
+With the containers running, you can execute the projects with one of the following commands:
 
+*Run the LocalRagCli project.*
 ```bash
-cd ./src/LocalRagCli
-# OR
-cd ./src/LocalRagCli-Reference
+dotnet run ./src/LocalRagCli/
 ```
 
-Then start the console app with the following command:
-
+*Run the LocalRagCli-Reference project.*
 ```bash
-dotnet run
+dotnet run ./src/LocalRagCli-Reference/
 ```
 
 # Clean up
