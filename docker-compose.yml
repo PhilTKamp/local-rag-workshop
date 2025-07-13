@@ -8,16 +8,6 @@ services:
       - ollama_data:/root/.ollama
     restart: unless-stopped
   
-  redis:
-    image: redis:6.2.6-alpine
-    container_name: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - redis_data:/data
-    command: redis-server --save 20 1 --loglevel warning
-    restart: always
-  
   postgresql:
     image: pgvector/pgvector:pg17
     container_name: postgresql
@@ -45,8 +35,6 @@ services:
 volumes:
   ollama_data:
     name: ollama_data
-  redis_data:
-    name: redis_data
   postgresql_data:
     name: postgresql_data
   pgAdmin_data:
