@@ -25,7 +25,6 @@ For Docker Engine and Docker Desktop, the install steps will vary based on your 
 
 [Mac install instructions](https://docs.docker.com/desktop/setup/install/mac-install/)
 
-
 ## First Time Set Up
 
 Before running any of the projects, there's some initial set up required. If you run into any issues that can't be resolved you can try
@@ -95,6 +94,21 @@ exit
 Note that these can be pulled via the web interface that ollama presents. Specifically with OllamaSharp you can do this in C# directly.
 Because these downloads can take a while, it's helpful to do this before a live workshop. 😉
 
+# Database administration
+
+As a utility tool, pgAdmin is included within the docker-compose.yml file to provide an additional easier experience for database
+admin tasks on this repo. With the containers running, it can be accessed at [http://localhost:15433](http://localhost:15433), the
+root account uses the email `myemail@email.com` with a password `Password123!` (set in the file "docker-compose.yml").
+
+To connect to postgres from pgAdmin, you'll want to Right-Click the servers, choose "Register > Server...", provide a name under the "General"
+tab. Then switching to the "Connection" tab, fill in the following values (all defined in docker-compose.yml):
+- "Host name/address" enter `postgresql` (name of the postgres container)
+- "Port" enter `5432`
+- "Username" enter `admin`
+- "Password" enter `Password123!`
+
+Click "Save" and the server will be added. From there you can do whatever admin tasks you desire.
+
 # Building and Running the projects
 
 Each project is implemented as a dotnet console project.
@@ -104,6 +118,8 @@ They were created with the following command:
 cd ./src
 dotnet new console --use-program-main -f net8.0 -o PROJECT_NAME
 ```
+
+
 
 ## Building the project(s)
 
