@@ -10,7 +10,7 @@ sandbox. Additionally, there is the LocalRagCli-Reference project, which provide
 > Disclaimer: I am not and will not pretend to be an expert in this space. Statements in this workshop
 > are made as accurate to my knowledge as possible. 
 
-# Initial Setup and Clean up
+# Initial Setup
 
 ## Before starting
 
@@ -95,32 +95,6 @@ exit
 Note that these can be pulled via the web interface that ollama presents. Specifically with OllamaSharp you can do this in C# directly.
 Because these downloads can take a while, it's helpful to do this before a live workshop. 😉
 
-## Final Clean Up
-
-All changes to the code and repo can be cleared up by running `git reset --hard main` which will return you to the initial state of the `main` branch.
-
-__Reset the state of the repository__
-
-You can reset your local repo to the starting point by running the following command:
-```bash
-git reset --hard main
-```
-
-__Tear down containers__
-
-One of the following commands, based on your discretion, can be used to clean up the docker set up.
-
-```bash
-# Tear down and delete the containers
-docker compose down
-
-# Do all of the above but also wipe the volumes (where the sql data and ollama models are stored)
-docker compose down --volumes
-
-# Do a full clean (containers, images, and volumes)
-docker compose down --rmi all --volumes
-```
-
 # Building and Running the projects
 
 Each project is implemented as a dotnet console project.
@@ -165,6 +139,38 @@ Then start the console app with the following command:
 ```bash
 dotnet run
 ```
+
+# Clean up
+
+Outside of the cloned repo, this project creates a few extra lingering resources that you may wish to clean up after experimenting.
+The largest of these resources are the docker volumes used to provide persistence to the ollama and postgres containers, these store the database and models used by
+Postgres and Ollama respectively. Additionally, Docker Desktop will keep the docker images for both Postgres and Ollama downloaded locally, though those are
+smaller in size.
+
+The following commands can be used to clean up changes to, or resources left by this repository.
+
+__Reset the state of the repository__
+
+You can reset your local repo to the starting point by running the following command:
+```bash
+git reset --hard main
+```
+
+__Tear down containers__
+
+One of the following commands, based on your discretion, can be used to clean up the docker set up.
+
+```bash
+# Tear down and delete the containers
+docker compose down
+
+# Do all of the above but also wipe the volumes (where the sql data and ollama models are stored)
+docker compose down --volumes
+
+# Do a full clean (containers, images, and volumes)
+docker compose down --rmi all --volumes
+```
+
 
 # Rough Overview on RAG
 
