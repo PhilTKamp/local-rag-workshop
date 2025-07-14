@@ -12,6 +12,14 @@ sandbox. Additionally, there is the LocalRagCli-Reference project, which provide
 
 # Initial Setup
 
+You can pull the code down however you'd prefer, whether that be downloading as a zip file or cloning the repo.
+
+Assuming you have [git installed](https://git-scm.com/downloads), then the repo can be cloned down by running the command:
+
+```bash
+git clone https://github.com/PhilTKamp/local-rag-workshop.git
+```
+
 ## Before starting
 
 This workshop/project as written requires that the machine you're using be capable of launching docker containers. I personally use the
